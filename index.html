@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Tv</title>
+    <style>
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        body{
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: sans-serif;
+        }
+        .container iframe, img{
+            margin: 0;
+            height: 1080px;
+            width: 100%;
+        }
+        #data{
+            position: fixed;
+            margin: 20px;
+            padding: 10px;
+            z-index: 10;
+            font-size: 25px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity .5s ease-in-out;
+        }
+        #data.visible{
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span id="data"></span>
+        <iframe src="http://iissrvsob.sob.ad-grendene.com/simonweb/TV.aspx?tv=114" frameborder="0" id="simon"></iframe>
+        <iframe src="carroussel.html" frameborder="0" id="lancamentos"></iframe>
+        <!-- Adicione mais elementos aqui -->
+    </div>
+    <script>
+        const elements = ['simon', 'lancamentos']; // Adicione mais IDs de elementos aqui
+        let currentIndex = 0;
+
+        function scrollToElement(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function startScrolling() {
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % elements.length;
+                const currentElement = elements[currentIndex];
+                scrollToElement(currentElement);
+                toggleDataVisibility(currentElement);
+            }, 59999); // 1 minuto = 60000 milissegundos
+        }
+
+        function toggleDataVisibility(currentElement) {
+            const elementoData = document.getElementById('data');
+            if (currentElement.startsWith('img')) {
+                elementoData.classList.add('visible'); // mostra
+            } else {
+                elementoData.classList.remove('visible'); // oculta
+            }
+        }
+
+        function atualizarDataHora() {
+            const elementoData = document.getElementById('data');
+            const agora = new Date();
+            const dia = String(agora.getDate()).padStart(2, '0');
+            const mes = String(agora.getMonth() + 1).padStart(2, '0'); // janeiro é 0
+            const ano = agora.getFullYear();
+            const horas = String(agora.getHours()).padStart(2, '0');
+            const minutos = String(agora.getMinutes()).padStart(2, '0');
+            const segundos = String(agora.getSeconds()).padStart(2, '0');
+            const dataHoraFormatada = `${dia}/${mes}/${ano}, ${horas}:${minutos}:${segundos}`;
+            elementoData.textContent = dataHoraFormatada;
+        }
+
+        window.onload = () => {
+            startScrolling();
+            atualizarDataHora(); // atualiza data e hora quando a página é aberta
+            setInterval(atualizarDataHora, 1000); // atualiza a data e hora a cada segundo
+        };
+    </script>
+</body>
+</html>
